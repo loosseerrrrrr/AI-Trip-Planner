@@ -74,24 +74,36 @@ function CreateTrip() {
 
     console.log('Sending prompt to AI:', FINAL_PROMPT)
 
-    const result = await chatSession.sendMessage(FINAL_PROMPT)
-    const responseText = result?.response?.text()
-    console.log('AI Response:', responseText)
-
-    await saveTrip(responseText)
-    setLoading(false)
+    try {
+      const result = await chatSession.sendMessage(FINAL_PROMPT)
+      const responseText = result?.response?.text()
+      console.log('AI Response:', responseText)
+      await saveTrip(responseText)
+    } catch (error) {
+      console.error('AI Error:', error)
+      toast('Gemini is busy right now, please try again in a moment!')
+      setLoading(false)
+    }
   }
 
   const saveTrip = async (tripData) => {
     const user = JSON.parse(localStorage.getItem('user'))
     const docId = Date.now().toString()
-    const cleanData = tripData.replace(/```json/g, '').replace(/```/g, '').trim()
+
+    // Extract JSON even if AI adds intro text before/after it
+    const jsonMatch = tripData.match(/\{[\s\S]*\}/)
+    if (!jsonMatch) {
+      console.error('No JSON found in AI response:', tripData)
+      toast('AI returned invalid data, please try again.')
+      setLoading(false)
+      return
+    }
 
     let parsed
     try {
-      parsed = JSON.parse(cleanData)
+      parsed = JSON.parse(jsonMatch[0])
     } catch (e) {
-      console.error('Failed to parse AI response:', cleanData)
+      console.error('Failed to parse AI response:', jsonMatch[0])
       toast('AI returned invalid data, please try again.')
       setLoading(false)
       return
