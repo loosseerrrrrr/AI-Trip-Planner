@@ -50,4 +50,4 @@ export const SelectBudgetOptions = [
     },
 ]
 
-export const AI_PROMPT = 'Generate Travel Plan for Location : {location}, for {totalDays} Days for {traveler} with a {budget} budget, give me Hotels options list with HotelName, Hotel address, Price, hotel image url, geo coordinates, rating, descriptions and suggest itinerary with placeName, Place Details, Place Image Url, Geo Coordinates, ticket Pricing, Time travel each of the location for {totalDays} days with each day plan with best time to visit in JSON format.'
+export const AI_PROMPT = 'Generate Travel Plan for Location : {location}, for {totalDays} Days for {traveler} with a {budget} budget. Give me the response STRICTLY in this JSON format with these EXACT key names: { "hotelOptions": [ { "hotelName": "", "hotelAddress": "", "priceRange": "", "hotelImageURL": "", "geoCoordinates": { "latitude": 0, "longitude": 0 }, "rating": 0, "description": "" } ], "itinerary": [ { "day": 1, "theme": "", "plan": [ { "placeName": "", "placeDetails": "", "placeImageUrl": "", "geoCoordinates": { "latitude": 0, "longitude": 0 }, "ticketPricing": "", "timeToSpend": "" } ] } ] }'

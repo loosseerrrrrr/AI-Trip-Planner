@@ -6,7 +6,6 @@ function Itinerary({ trip }) {
 
   if (!itinerary) return null
 
-  // handle both array and object formats from AI
   const days = Array.isArray(itinerary)
     ? itinerary
     : Object.entries(itinerary).map(([key, value]) => ({
@@ -22,10 +21,14 @@ function Itinerary({ trip }) {
           <div key={index}>
             <h2 className='font-bold text-lg mb-3 text-[#040D5A]'>
               📅 Day {dayPlan?.day || index + 1}
-              {dayPlan?.theme && <span className='font-normal text-gray-500 text-sm ml-2'>— {dayPlan.theme}</span>}
+              {(dayPlan?.theme || dayPlan?.title) && (
+                <span className='font-normal text-gray-500 text-sm ml-2'>
+                  — {dayPlan?.theme || dayPlan?.title}
+                </span>
+              )}
             </h2>
             <div className='flex flex-col gap-3'>
-              {(dayPlan?.plan || dayPlan?.places || []).map((place, i) => (
+              {(dayPlan?.plan || dayPlan?.activities || dayPlan?.places || []).map((place, i) => (
                 <PlaceCardItem key={i} place={place} />
               ))}
             </div>
