@@ -11,6 +11,7 @@ import { setDoc, doc } from 'firebase/firestore'
 import { useNavigate } from 'react-router-dom'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { useGoogleLogin } from '@react-oauth/google'
+import { FaTripadvisor } from 'react-icons/fa'
 
 function CreateTrip() {
   const [formData, setFormData] = useState({})
@@ -105,6 +106,39 @@ function CreateTrip() {
 
     toast('Trip saved!')
     navigate(`/view-trip/${docId}`)
+  }
+
+  if (loading) {
+    return (
+      <div className='fixed inset-0 flex flex-col items-center justify-center bg-white z-50'>
+        <div className='flex flex-col items-center gap-8'>
+
+          <div className='relative flex items-center justify-center'>
+            <div className='absolute w-32 h-32 border-4 border-dashed border-[#040D5A] rounded-full animate-spin' style={{ animationDuration: '3s' }}></div>
+            <div className='absolute w-24 h-24 border-4 border-dotted border-blue-300 rounded-full animate-spin' style={{ animationDuration: '2s', animationDirection: 'reverse' }}></div>
+            <FaTripadvisor className='text-6xl text-[#040D5A] animate-pulse' />
+          </div>
+
+          <div className='text-center'>
+            <h2 className='font-bold text-2xl text-[#040D5A]'>Crafting Your Perfect Trip</h2>
+            <p className='text-gray-400 mt-2 text-sm'>AI is building your personalised itinerary...</p>
+          </div>
+
+          <div className='flex gap-3'>
+            {['✈️', '🏨', '🗺️', '🎯'].map((emoji, i) => (
+              <span
+                key={i}
+                className='text-2xl animate-bounce'
+                style={{ animationDelay: `${i * 200}ms` }}
+              >
+                {emoji}
+              </span>
+            ))}
+          </div>
+
+        </div>
+      </div>
+    )
   }
 
   return (

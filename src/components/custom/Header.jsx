@@ -22,11 +22,16 @@ function Header() {
     <div className='p-2 shadow-sm flex justify-between items-center'>
       <img src='/logo.svg' />
       <div>
-        {user ? (
-          <img src={user.picture} className='rounded-full w-9 h-9' />
-        ) : (
-          <Button onClick={() => login()}>Sign In</Button>
-        )}
+       {user ? (
+              <img
+                src={user.picture}
+                className='rounded-full w-9 h-9'
+                referrerPolicy="no-referrer"  // 👈 add this — fixes Google image CORS/expiry issues
+                onError={(e) => { e.target.style.display = 'none' }}
+              />
+            ) : (
+              <Button onClick={() => login()}>Sign In</Button>
+            )}
       </div>
     </div>
   )
