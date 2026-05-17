@@ -50,4 +50,34 @@ export const SelectBudgetOptions = [
     },
 ]
 
-export const AI_PROMPT = 'Generate Travel Plan for Location : {location}, for {totalDays} Days for {traveler} with a {budget} budget. Give me the response STRICTLY in this JSON format with these EXACT key names: { "hotelOptions": [ { "hotelName": "", "hotelAddress": "", "priceRange": "", "hotelImageURL": "", "geoCoordinates": { "latitude": 0, "longitude": 0 }, "rating": 0, "description": "" } ], "itinerary": [ { "day": 1, "theme": "", "plan": [ { "placeName": "", "placeDetails": "", "placeImageUrl": "", "geoCoordinates": { "latitude": 0, "longitude": 0 }, "ticketPricing": "", "timeToSpend": "" } ] } ] }'
+export const AI_PROMPT = `Generate Travel Plan for Location : {location}, for {totalDays} Days for {traveler} with a {budget} budget. Give me the response STRICTLY in this JSON format with these exact fields:
+
+{
+  "hotels": [
+    {
+      "hotelName": "Hotel Name",
+      "hotelAddress": "Full Address",
+      "price": "Price range per night",
+      "imageUrl": "Hotel image URL",
+      "rating": 4.5,
+      "description": "Brief description"
+    }
+  ],
+  "itinerary": [
+    {
+      "day": 1,
+      "title": "Day 1 - Activity Title",
+      "bestTime": "Morning/Afternoon/Evening",
+      "places": [
+        {
+          "placeName": "Place Name",
+          "placeDetails": "Details about the place",
+          "placeImageUrl": "Image URL",
+          "geoCoordinates": "40.7128, -74.0060",
+          "ticketPricing": "Price if any",
+          "visitingTime": "Time to spend"
+        }
+      ]
+    }
+  ]
+}`
