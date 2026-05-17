@@ -2,26 +2,53 @@ import React, { useState } from 'react'
 import { Button } from '../ui/button'
 import { useGoogleLogin } from '@react-oauth/google'
 import { useNavigate } from 'react-router-dom'
+import { toast } from 'sonner'
 
 function Header() {
-  const user = JSON.parse(localStorage.getItem('user'))
+  const [user, setUser] = useState(() => {
+    try {
+      const storedUser = localStorage.getItem('user')
+      return storedUser ? JSON.parse(storedUser) : null
+    } catch (error) {
+      console.error('Failed to parse user from localStorage:', error)
+      localStorage.removeItem('user')
+      return null
+    }
+  })
   const [showMenu, setShowMenu] = useState(false)
   const navigate = useNavigate()
 
   const login = useGoogleLogin({
     onSuccess: async (tokenInfo) => {
-      const res = await fetch('https://www.googleapis.com/oauth2/v1/userinfo', {
-        headers: { Authorization: `Bearer ${tokenInfo.access_token}` }
-      })
-      const data = await res.json()
-      localStorage.setItem('user', JSON.stringify(data))
-      window.location.reload()
+      try {
+        const res = await fetch('https://www.googleapis.com/oauth2/v1/userinfo', {
+          headers: { Authorization: `Bearer ${tokenInfo.access_token}` }
+        })
+        
+        if (!res.ok) {
+          throw new Error(`Failed to fetch user info: ${res.status}`)
+        }
+        
+        const data = await res.json()
+        localStorage.setItem('user', JSON.stringify(data))
+        setUser(data)
+        toast('Login successful!')
+        window.location.reload()
+      } catch (error) {
+        console.error('Login error:', error)
+        toast('Login failed. Please try again.')
+      }
     },
-    onError: (error) => console.log(error)
+    onError: (error) => {
+      console.error('Google login error:', error)
+      toast('Google sign-in failed. Please try again.')
+    }
   })
 
   const logout = () => {
     localStorage.removeItem('user')
+    setUser(null)
+    toast('Logged out successfully!')
     window.location.href = '/'
   }
 
@@ -36,6 +63,7 @@ function Header() {
               referrerPolicy='no-referrer'
               className='rounded-full w-9 h-9 cursor-pointer border-2 border-gray-200 hover:border-[#040D5A] transition-all'
               onClick={() => setShowMenu(!showMenu)}
+              alt='User profile'
             />
             {showMenu && (
               <div className='absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border z-50 overflow-hidden'>
