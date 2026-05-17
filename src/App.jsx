@@ -1,6 +1,5 @@
-import { HeartOff } from 'lucide-react'
 import { Button } from './components/ui/button'
-import Hero from './components/custom/hero'
+import Hero from './components/custom/Hero'
 
 function App() {
   return (
