@@ -4,61 +4,49 @@ import { Button } from './ui/button'
 class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props)
-    this.state = { hasError: false, error: null, errorInfo: null }
+    this.state = { hasError: false, error: null }
   }
 
   static getDerivedStateFromError(error) {
-    return { hasError: true }
+    return { hasError: true, error }
   }
 
   componentDidCatch(error, errorInfo) {
-    console.error('Error caught by ErrorBoundary:', error, errorInfo)
-    this.setState({
-      error: error,
-      errorInfo: errorInfo
-    })
+    console.error('Error caught by boundary:', error, errorInfo)
   }
 
-  handleReset = () => {
-    this.setState({ hasError: false, error: null, errorInfo: null })
+  resetError = () => {
+    this.setState({ hasError: false, error: null })
     window.location.href = '/'
   }
 
   render() {
     if (this.state.hasError) {
       return (
-        <div className='min-h-screen flex items-center justify-center bg-gradient-to-br from-red-50 to-orange-50 px-4'>
-          <div className='max-w-md w-full bg-white rounded-lg shadow-lg p-8 text-center'>
-            <div className='text-6xl mb-4'>😕</div>
-            <h1 className='text-2xl font-bold text-gray-800 mb-2'>Oops! Something went wrong</h1>
+        <div className='flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-blue-50 to-white p-4'>
+          <div className='text-center max-w-md'>
+            <div className='text-6xl mb-4'>⚠️</div>
+            <h1 className='text-3xl font-bold text-[#040D5A] mb-2'>Oops! Something Went Wrong</h1>
             <p className='text-gray-600 mb-6'>
               We encountered an unexpected error. Don't worry, our team has been notified.
             </p>
             
-            {process.env.NODE_ENV === 'development' && this.state.error && (
-              <details className='mt-4 mb-6 text-left'>
-                <summary className='cursor-pointer text-sm text-gray-600 hover:text-gray-800 font-medium'>
-                  Error Details (Development Only)
-                </summary>
-                <pre className='mt-2 text-xs bg-gray-100 p-3 rounded overflow-auto max-h-40'>
-                  {this.state.error.toString()}
-                  {'\n\n'}
-                  {this.state.errorInfo?.componentStack}
-                </pre>
-              </details>
-            )}
+            <div className='bg-red-50 border border-red-200 rounded-lg p-4 mb-6 text-left'>
+              <p className='text-sm text-gray-500 font-mono break-words'>
+                {this.state.error?.message || 'Unknown error'}
+              </p>
+            </div>
 
-            <div className='flex gap-3'>
+            <div className='flex gap-3 justify-center'>
               <Button 
-                onClick={this.handleReset}
-                className='flex-1'
+                onClick={this.resetError}
+                className='bg-[#040D5A] hover:bg-[#030850]'
               >
-                Go Home
+                Go to Home
               </Button>
               <Button 
                 onClick={() => window.location.reload()}
                 variant='outline'
-                className='flex-1'
               >
                 Reload Page
               </Button>

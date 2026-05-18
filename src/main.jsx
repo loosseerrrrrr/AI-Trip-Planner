@@ -64,12 +64,12 @@ const router = createBrowserRouter([
 // Render App
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <ErrorBoundary>
-      <GoogleOAuthProvider
-        clientId={import.meta.env.VITE_GOOGLE_AUTH_CLIENT_ID}
-      >
+    <GoogleOAuthProvider
+      clientId={import.meta.env.VITE_GOOGLE_AUTH_CLIENT_ID}
+    >
+      <ErrorBoundary>
         <RouterProvider router={router} />
-      </GoogleOAuthProvider>
-    </ErrorBoundary>
+      </ErrorBoundary>
+    </GoogleOAuthProvider>
   </React.StrictMode>
 )
