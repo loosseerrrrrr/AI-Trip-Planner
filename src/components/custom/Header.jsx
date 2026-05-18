@@ -3,6 +3,7 @@ import { Button } from '../ui/button'
 import { useGoogleLogin } from '@react-oauth/google'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
+import { Loader2 } from 'lucide-react'
 
 function Header() {
   const [user, setUser] = useState(() => {
@@ -16,10 +17,12 @@ function Header() {
     }
   })
   const [showMenu, setShowMenu] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate()
 
   const login = useGoogleLogin({
     onSuccess: async (tokenInfo) => {
+      setIsLoading(true)
       try {
         const res = await fetch('https://www.googleapis.com/oauth2/v1/userinfo', {
           headers: { Authorization: `Bearer ${tokenInfo.access_token}` }
@@ -37,11 +40,13 @@ function Header() {
       } catch (error) {
         console.error('Login error:', error)
         toast('Login failed. Please try again.')
+        setIsLoading(false)
       }
     },
     onError: (error) => {
       console.error('Google login error:', error)
       toast('Google sign-in failed. Please try again.')
+      setIsLoading(false)
     }
   })
 
@@ -54,7 +59,7 @@ function Header() {
 
   return (
     <div className='p-3 shadow-sm flex justify-between items-center px-5 relative'>
-      <img src='/logo.svg' className='cursor-pointer' onClick={() => navigate('/')} />
+      <img src='/logo.svg' className='cursor-pointer' onClick={() => navigate('/')} alt='Logo' />
       <div>
         {user ? (
           <div className='relative'>
@@ -89,7 +94,16 @@ function Header() {
             )}
           </div>
         ) : (
-          <Button onClick={() => login()}>Sign In</Button>
+          <Button onClick={() => login()} disabled={isLoading} className='flex items-center gap-2'>
+            {isLoading ? (
+              <>
+                <Loader2 className='w-4 h-4 animate-spin' />
+                Signing in...
+              </>
+            ) : (
+              'Sign In'
+            )}
+          </Button>
         )}
       </div>
     </div>
