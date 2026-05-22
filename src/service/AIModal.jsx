@@ -12,24 +12,25 @@ const ai = new GoogleGenAI({
 
 export const chatSession = {
   sendMessage: async (message) => {
+
     try {
-      const response = await ai.models.generateContent({
-        model: "gemini-1.5-flash",
+
+      const result = await ai.models.generateContent({
+        model: "gemini-2.5-flash",
         contents: message,
       })
-      
-      if (!response) {
-        throw new Error('No response from AI')
-      }
 
       return {
         response: {
-          text: () => response.text()
+          text: () => result.text
         }
       }
+
     } catch (error) {
-      console.error('Error in chatSession:', error)
+
+      console.error("AI Error:", error)
       throw error
+
     }
   }
 }
